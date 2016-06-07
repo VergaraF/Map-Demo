@@ -19,22 +19,59 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         //It could be done in less lines but as I am learning I rather see everything like this, for now.
         
-        var latitude : CLLocationDegrees = 40.7
-        var longitude: CLLocationDegrees = -73.9
+        //40.758585, -73.985104
         
-        var latDelta : CLLocationDegrees = 0.01
-        var longDelta: CLLocationDegrees = 0.01
+        let latitude : CLLocationDegrees = 40.758585
+        let longitude: CLLocationDegrees = -73.985104
         
-        var span : MKCoordinateSpan = MKCoordinateSpanMake(latDelta, longDelta)
+        let latDelta : CLLocationDegrees = 0.05
+        let longDelta: CLLocationDegrees = 0.05
         
-        var location : CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
+        let span : MKCoordinateSpan = MKCoordinateSpanMake(latDelta, longDelta)
         
-        var region : MKCoordinateRegion = MKCoordinateRegionMake(location, span)
+        let location : CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
+        
+        let region : MKCoordinateRegion = MKCoordinateRegionMake(location, span)
         
         map.setRegion(region, animated: true)
         
+        let annotation : MKPointAnnotation = MKPointAnnotation()
+        
+        annotation.coordinate = location
+        
+        annotation.title = "Times Square"
+        
+        annotation.subtitle = "Where I'll buy some bread tonight"
+        
+        map.addAnnotation(annotation)
+        
+        let uilpgr = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.action(_:)))
+        
+        uilpgr.minimumPressDuration = 2
+        
+        map.addGestureRecognizer(uilpgr)
+        
+      //  uilpgr.minimunPressDuration(2)
         
         // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    func action(gestureRecognizer: UIGestureRecognizer){
+        
+        let touchPoint = gestureRecognizer.locationInView(self.map)
+        
+        let newCoordinate: CLLocationCoordinate2D = map.convertPoint(touchPoint, toCoordinateFromView: self.map)
+        print("Gesture recognized")
+                
+        let annotation : MKPointAnnotation = MKPointAnnotation()
+        
+        annotation.coordinate = newCoordinate
+        
+        annotation.title = "New place for user"
+        
+        annotation.subtitle = "Where I'll buy some bread tonight"
+        
+        map.addAnnotation(annotation)
     }
 
     override func didReceiveMemoryWarning() {
