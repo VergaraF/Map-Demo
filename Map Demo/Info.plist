@@ -30,6 +30,10 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Because this application requires your location to work properly </string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Because this application based its services on your permanent location</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

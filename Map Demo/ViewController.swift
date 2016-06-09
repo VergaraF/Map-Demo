@@ -9,13 +9,21 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController, MKMapViewDelegate {
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
-    @IBOutlet var map: MKMapView!
     
+    @IBOutlet var map: MKMapView!
+    var locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        
+        
         
         //It could be done in less lines but as I am learning I rather see everything like this, for now.
         
@@ -73,7 +81,35 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         map.addAnnotation(annotation)
     }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        let userLocation : CLLocation = locations[0]
+        
+        let latitude = userLocation.coordinate.latitude
+        let longitude = userLocation.coordinate.longitude
+        
+        let latDelta : CLLocationDegrees = 0.05
+        let longDelta: CLLocationDegrees = 0.05
+        
+        let span : MKCoordinateSpan = MKCoordinateSpanMake(latDelta, longDelta)
+        
+        let location : CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
+        
+        let region : MKCoordinateRegion = MKCoordinateRegionMake(location, span)
+        
+        let annotation: MKPointAnnotation = MKPointAnnotation()
+        
+        annotation.coordinate = location
+        
+        annotation.title = "User position"
+        
+        map.addAnnotation(annotation)
 
+        map.setRegion(region, animated: true)
+        
+        print(locations)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
